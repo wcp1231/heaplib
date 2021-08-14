@@ -1,6 +1,5 @@
 package org.perfkit.heaplib.cli.ui;
 
-import org.gridkit.jvmtool.heapdump.HeapHistogram;
 import org.netbeans.lib.profiler.heap.*;
 
 import java.util.ArrayList;
@@ -48,8 +47,13 @@ public class TreeNode {
         return sizeText;
     }
 
-    public Instance getInstance() {
-        return instance;
+    public int getDeep() {
+        return deep;
+    }
+
+    public void setNameAndSizeText(String name, String size) {
+        this.nameText = name;
+        this.sizeText = size;
     }
 
     public boolean isCollapse() {
@@ -137,8 +141,7 @@ public class TreeNode {
         this.size = item.getRetainedSize();
         String size = formatSize(item.getSize());
         String retained = formatSize(this.size);
-        this.sizeText = String.format("%7s%7s", size, retained);
-
+        this.sizeText = String.format("%7s%10s", size, retained);
     }
 
     private String formatSize(double size) {

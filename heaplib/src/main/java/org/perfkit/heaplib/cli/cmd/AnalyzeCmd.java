@@ -43,16 +43,6 @@ public class AnalyzeCmd implements CmdRef {
             try {
                 Heap heap = heapProvider.openHeap(host);
                 List<Instance> dominators = new ArrayList<>(getDominatorRoots(heap));
-                /*
-                int n = 0;
-                List<Instance> roots = new ArrayList<>();
-                for (Instance instance : heap.getAllInstances()) {
-                    n++;
-                    roots.add(instance);
-                    if (n > 30) {
-                        break;
-                    }
-                }*/
                 tui(dominators);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -103,11 +93,7 @@ public class AnalyzeCmd implements CmdRef {
                 final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
                 final Window window = new BasicWindow("Dominators");
                 window.setHints(Arrays.asList(Window.Hint.FULL_SCREEN, Window.Hint.NO_DECORATIONS));
-                //Panel contentPanel = new Panel(new GridLayout(1));
                 TreeViewBox treeViewBox = new TreeViewBox(roots);
-                //contentPanel.addComponent(treeView);
-
-                //contentPanel.addComponent(new Button("Close", window::close).setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(2)));
 
                 window.setComponent(treeViewBox);
                 textGUI.addWindowAndWait(window);

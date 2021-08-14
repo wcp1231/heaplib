@@ -143,6 +143,20 @@ public class TreeViewBox<V> extends AbstractListBox<TreeNode, TreeViewBox<TreeNo
                         return handleLeft();
                     case 'l':
                         return handleRight();
+                    case 'b':
+                        if (this.getSize() != null) {
+                            this.setSelectedIndex(this.getSelectedIndex() - this.getSize().getRows());
+                        }
+                        return Result.HANDLED;
+                    case 'f':
+                        if (this.getSize() != null) {
+                            this.setSelectedIndex(this.getSelectedIndex() + this.getSize().getRows());
+                        }
+                        return Result.HANDLED;
+                    case 'J':
+                        return moveDownToNextLeve();
+                    case 'K':
+                        return moveUpToPrevLevel();
                 }
         }
         return super.handleKeyStroke(keyStroke);
@@ -160,12 +174,44 @@ public class TreeViewBox<V> extends AbstractListBox<TreeNode, TreeViewBox<TreeNo
         return Result.MOVE_FOCUS_DOWN;
     }
 
+    private Result moveDownToNextLeve() {
+        int idx = this.selectedIndex;
+        int curLevel = this.items.get(idx).getDeep();
+        for (; idx < this.items.size(); idx++) {
+            if (this.items.get(idx).getDeep() > curLevel) {
+                break;
+            }
+        }
+        if (idx < this.items.size()) {
+            while (this.selectedIndex < idx) {
+                handleDown();
+            }
+        }
+        return Result.HANDLED;
+    }
+
     private Result handleUp() {
         if (!this.items.isEmpty() && this.selectedIndex != 0) {
             --this.selectedIndex;
             return Result.HANDLED;
         }
         return Result.MOVE_FOCUS_UP;
+    }
+
+    private Result moveUpToPrevLevel() {
+        int idx = this.selectedIndex;
+        int curLevel = this.items.get(idx).getDeep();
+        for (; idx >= 0; idx--) {
+            if (this.items.get(idx).getDeep() < curLevel) {
+                break;
+            }
+        }
+        if (idx >= 0) {
+            while (this.selectedIndex > idx) {
+                handleUp();
+            }
+        }
+        return Result.HANDLED;
     }
 
     private Result handleLeft() {
@@ -185,7 +231,7 @@ public class TreeViewBox<V> extends AbstractListBox<TreeNode, TreeViewBox<TreeNo
     }
 
     public static class TreeViewListItemRenderer extends ListItemRenderer<TreeNode, TreeViewBox<TreeNode>> {
-        private static final int SIZE_TEXT_LENGTH = 15;
+        private static final int SIZE_TEXT_LENGTH = 18;
         public int getHotSpotPositionOnLine(int selectedIndex) {
             return -1;
         }
@@ -199,7 +245,7 @@ public class TreeViewBox<V> extends AbstractListBox<TreeNode, TreeViewBox<TreeNo
             }
 
             int fullColumns = graphics.getSize().getColumns();
-            String sizeText = item.getSizeText();//getSizeText(item);
+            String sizeText = item.getSizeText();
             String label = getItemText(item.getNameText(), listBox.getStartColumns(), fullColumns);
 
             for(label = TerminalTextUtils.fitString(label, fullColumns); TerminalTextUtils.getColumnWidth(label) + SIZE_TEXT_LENGTH < fullColumns; label = label + " ") {
@@ -210,7 +256,10 @@ public class TreeViewBox<V> extends AbstractListBox<TreeNode, TreeViewBox<TreeNo
         }
 
         private String getItemText(String nameText, int startCol, int fullColumns) {
-            //String name = item.getJavaClass().getName() + '#' + item.getInstanceNumber();
+            if (nameText.equals("Name")) {
+                return nameText;
+            }
+
             int availableSize = fullColumns - SIZE_TEXT_LENGTH;
             if (nameText.length() < startCol) {
                 nameText = "";
