@@ -81,6 +81,7 @@
                   <include>org.gridkit.gzrand:*</include>
                   <include>org.perfkit.sjk.parsers:*</include>
                   <include>com.beust:*</include>
+                  <include>com.googlecode.lanterna:*</include>
                 </includes>
               </artifactSet>
               <transformers>

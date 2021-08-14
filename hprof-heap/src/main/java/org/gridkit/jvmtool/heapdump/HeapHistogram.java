@@ -15,13 +15,7 @@
  */
 package org.gridkit.jvmtool.heapdump;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.netbeans.lib.profiler.heap.Instance;
 
@@ -51,6 +45,18 @@ public class HeapHistogram implements InstanceCallback {
         }
     };
 
+    public static final Comparator<ClassRecord> BY_INSTANCE_SIZE = new Comparator<ClassRecord>() {
+
+        @Override
+        public int compare(ClassRecord o1, ClassRecord o2) {
+            return Long.valueOf(o1.totalSize).compareTo(o2.totalSize);
+        }
+
+        public String toString() {
+            return "BY_SIZE";
+        }
+    };
+
     public static final Comparator<ClassRecord> BY_COUNT = new Comparator<ClassRecord>() {
 
         @Override
@@ -64,6 +70,7 @@ public class HeapHistogram implements InstanceCallback {
     };
 
     private Map<String, ClassRecord> classes = new HashMap<String, ClassRecord>();
+    private PriorityQueue<ClassRecord> topInstance = new PriorityQueue(BY_INSTANCE_SIZE);
     private ClassRecord total = new ClassRecord("Total heap");
     private RefSet known = null;
 
@@ -94,6 +101,23 @@ public class HeapHistogram implements InstanceCallback {
         }
         ++cr.instanceCount;
         cr.totalSize += i.getSize();
+
+        // for instance
+        ClassRecord lr = new ClassRecord(cn + "#" + i.getInstanceNumber());
+        lr.totalSize += i.getSize();
+        topInstance.add(lr);
+        if (topInstance.size() > 15) {
+            topInstance.poll();
+        }
+    }
+
+    public Collection<ClassRecord> getTopInstances() {
+        List<ClassRecord> result = new ArrayList<>(topInstance.size());
+        while (!topInstance.isEmpty()) {
+            result.add(topInstance.poll());
+        }
+        Collections.reverse(result);
+        return result;
     }
 
     public long getTotalCount() {
@@ -121,6 +145,12 @@ public class HeapHistogram implements InstanceCallback {
     public Collection<ClassRecord> getHistoBySize() {
         List<ClassRecord> histo = new ArrayList<HeapHistogram.ClassRecord>(classes.values());
         Collections.sort(histo, BY_SIZE);
+        return histo;
+    }
+
+    public Collection<ClassRecord> getHistoByCount() {
+        List<ClassRecord> histo = new ArrayList<HeapHistogram.ClassRecord>(classes.values());
+        Collections.sort(histo, BY_COUNT);
         return histo;
     }
 

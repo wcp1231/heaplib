@@ -24,7 +24,7 @@ package org.netbeans.lib.profiler.heap;
  *
  * @author Tomas Hurka
  */
-class HprofFieldValue extends HprofField implements FieldValue {
+public class HprofFieldValue extends HprofField implements FieldValue {
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     HprofFieldValue(ClassDump cls, long offset) {

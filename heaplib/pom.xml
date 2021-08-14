@@ -44,6 +44,13 @@
       <groupId>org.gridkit.jvmtool</groupId>
       <artifactId>sjk-cli</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.googlecode.lanterna</groupId>
+      <artifactId>lanterna</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

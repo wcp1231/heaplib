@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author Tomas Hurka
  */
-class ObjectArrayDump extends ArrayDump implements ObjectArrayInstance {
+public class ObjectArrayDump extends ArrayDump implements ObjectArrayInstance {
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     ObjectArrayDump(ClassDump cls, long offset) {

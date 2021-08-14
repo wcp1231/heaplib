@@ -66,4 +66,8 @@ final class Summary implements HeapSummary {
     public long getTotalLiveInstances() {
         return totalLiveInstances;
     }
+
+    public long getClassCount() {
+        return -1;
+    }
 }

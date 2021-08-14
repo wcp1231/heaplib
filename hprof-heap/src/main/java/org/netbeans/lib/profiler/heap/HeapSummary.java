@@ -65,4 +65,6 @@ public interface HeapSummary {
      * @return number of total live instances in the heap
      */
     long getTotalLiveInstances();
+
+    long getClassCount();
 }
