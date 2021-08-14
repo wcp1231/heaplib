@@ -2,6 +2,7 @@ package org.perfkit.heaplib.cli.cmd;
 
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
+import com.googlecode.lanterna.graphics.PropertyTheme;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -11,7 +12,9 @@ import org.netbeans.lib.profiler.heap.Heap;
 import org.netbeans.lib.profiler.heap.Instance;
 import org.perfkit.heaplib.cli.ui.TreeViewBox;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class AnalyzeCmd implements CmdRef {
@@ -91,6 +94,7 @@ public class AnalyzeCmd implements CmdRef {
                 screen.startScreen();
 
                 final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
+                textGUI.setTheme(new PropertyTheme(loadPropTheme("keep-theme.properties")));
                 final Window window = new BasicWindow("Dominators");
                 window.setHints(Arrays.asList(Window.Hint.FULL_SCREEN, Window.Hint.NO_DECORATIONS));
                 TreeViewBox treeViewBox = new TreeViewBox(roots);
@@ -107,6 +111,24 @@ public class AnalyzeCmd implements CmdRef {
                         e.printStackTrace();
                     }
                 }
+            }
+        }
+
+        private static Properties loadPropTheme(String resourceFileName) {
+            Properties properties = new Properties();
+
+            try {
+                ClassLoader classLoader = AbstractTextGUI.class.getClassLoader();
+                InputStream resourceAsStream = classLoader.getResourceAsStream(resourceFileName);
+                if (resourceAsStream == null) {
+                    resourceAsStream = new FileInputStream("src/main/resources/" + resourceFileName);
+                }
+
+                properties.load((InputStream)resourceAsStream);
+                ((InputStream)resourceAsStream).close();
+                return properties;
+            } catch (IOException var4) {
+                return null;
             }
         }
     }

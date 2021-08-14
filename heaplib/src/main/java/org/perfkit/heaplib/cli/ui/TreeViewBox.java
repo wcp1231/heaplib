@@ -1,7 +1,9 @@
 package org.perfkit.heaplib.cli.ui;
 
 import com.googlecode.lanterna.TerminalTextUtils;
+import com.googlecode.lanterna.bundle.LanternaThemes;
 import com.googlecode.lanterna.graphics.ThemeDefinition;
+import com.googlecode.lanterna.graphics.ThemeStyle;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.input.KeyStroke;
 import org.netbeans.lib.profiler.heap.Instance;
@@ -231,7 +233,7 @@ public class TreeViewBox<V> extends AbstractListBox<TreeNode, TreeViewBox<TreeNo
     }
 
     public static class TreeViewListItemRenderer extends ListItemRenderer<TreeNode, TreeViewBox<TreeNode>> {
-        private static final int SIZE_TEXT_LENGTH = 18;
+        private static final int SIZE_TEXT_LENGTH = 20;
         public int getHotSpotPositionOnLine(int selectedIndex) {
             return -1;
         }

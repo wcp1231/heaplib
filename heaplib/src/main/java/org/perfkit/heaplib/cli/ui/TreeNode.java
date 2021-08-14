@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class TreeNode {
-    private static final String INDENT = "  ";
+    private static final String INDENT = "   ";
     private int deep;
     private boolean collapse;
     private Instance instance;
@@ -134,7 +134,7 @@ public class TreeNode {
 
     private void setSizeText(Instance item) {
         if (item == null) {
-            this.sizeText = "";
+            this.sizeText = "                 ";
             return;
         }
 
